@@ -12,12 +12,11 @@ G=gs(_G)
 cp=component
 pc=computer
 beep=pc.beep
-function iv(a,m,...) return cp.invoke(a,m,...) end
-function gc(c) return cp.list(c)() end
+function gc(c) return cp.proxy(cp.list(c)()) end
 wnc=gc("modem")
-function bc(p,...) return iv(wnc,"broadcast",p,...) end
+function bc(p,...) return wnc.broadcast(p,...) end
 rom=gc("eeprom")
-iv(wnc,"open",40)
+wnc.open(40)
 
 function run()
   while true do
@@ -27,7 +26,7 @@ function run()
 end
 
 function set()
-  iv(rom,"set",sig[7])
+  rom.set(sig[7])
   beep(400,.5)
   pc.shutdown(true)
 end
