@@ -22,7 +22,7 @@ print("Server found!")
 print("Address: "..server)
 local cmd=""
 while not (cmd=="exit") do
-  cmd=term.read({nowrap=true,dobreak=false})
+  cmd=term.read({nowrap=true})
   cmd=string.sub(cmd,1,#cmd-1) --this is to remove the /n at the end
   local cargs=argument.parse(cmd)
   for i=1,#cargs do

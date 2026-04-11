@@ -12,11 +12,15 @@ function argument.parse(s,dl,qt)
     local arg=string.sub(s,1,si-1)
     if string.sub(s,1,1)==qt and string.find(s,qt,2) then
       local qi=string.find(s,qt,2)
-      arg=string.sub(s,1,qi)
+      arg=string.sub(s,2,qi-1)
       s=string.sub(s,qi)
       si=string.find(s,dl)
     end
-    s=string.sub(s,si+1)
+    if si then
+      s=string.sub(s,si+1)
+    else
+      s=""
+    end
     args[#args+1] = arg
   end
   return args

@@ -4,6 +4,25 @@ local filesystem = require("filesystem")
 local event = require("event")
 local modem = component.modem
 local args,options = shell.parse(...)
+
+local function printStrength(str)
+  if not modem.getStrength then
+    print("Broadcasting "..str.." over wired connection.")
+  else
+    print("Broadcasting "..str.." at strength "..modem.getStrength()..".")
+  end
+end
+
+local function setStrength(strength)
+  if modem.setStrength then
+    modem.setStrength(strength)
+  else
+    print("Can't specify stength over wired connection.")
+  end
+end
+
+
+
 if (#args==0) then
   print("Usage: rmflash <'run'/file> <strength> <-t>")
   print("run will make the target run its main program and won't flash an image.")
@@ -13,13 +32,13 @@ if (#args==0) then
   print("Note: not all roms support -t, in that case -t will do nothing.")
 elseif (args[1]=="run") then
   if (#args>1 and tonumber(args[2])) then
-    modem.setStrength(tonumber(args[2]))
+    setStrength(tonumber(args[2]))
   end
-  print("Broadcasting run message at strength "..modem.getStrength()..".")
+  printStrength("run message")
   modem.broadcast(40,"run")
 else
   if (#args>1 and tonumber(args[2])) then
-    modem.setStrength(tonumber(args[2]))
+    setStrength(tonumber(args[2]))
   end
   if (not filesystem.exists(shell.resolve(args[1]))) then
     print("File not found.")
@@ -45,7 +64,7 @@ else
     data=data..file:read(2048)
   end
   file:close()
-  print("Broadcasting image at strength "..modem.getStrength()..".")
+  printStrength("image")
   if options["t"] then
     print("Testing mode. EEPROM will not be flashed.")
     modem.broadcast(40,"test",data)
